@@ -8,39 +8,77 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "Shopper",
       initialRoute: "/",
-      routes: {
-        "/": (context) => HomePage(),
-        "/settings": (context) => SettingsPage()
-      },
       theme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Colors.lightBlue[800],
-        accentColor: Colors.cyan[600],
-        fontFamily: 'Georgia',
-        textTheme: TextTheme(
-          headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-          headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-          bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+        brightness: Brightness.light,
+        accentColor: Colors.deepPurpleAccent,
+        applyElevationOverlayColor: true,
+        buttonColor: Colors.greenAccent,
+        snackBarTheme: SnackBarThemeData(
+          actionTextColor: Colors.blue,
+          backgroundColor: Colors.deepPurpleAccent,
+          disabledActionTextColor: Colors.amberAccent,
+          elevation: 10.0
+        ),
+        tabBarTheme: TabBarTheme(
+          labelColor: Colors.black,
+          labelStyle: TextStyle(
+            fontFamily: "Times New Roman",
+          ),
+          unselectedLabelColor: Colors.white
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.deepPurpleAccent,
+          centerTitle: true,
+          elevation: 5.0,
+          foregroundColor: Colors.white70,
+          titleSpacing: 2.0,
+          titleTextStyle: TextStyle(
+            fontFamily: "Times New Roman"
+          )
         ),
       ),
+      routes: {
+        "/": (context) => HomePage(),
+        "/search": (context) => SearchPage(),
+        "/settings": (context) => SettingsPage(),
+      },
     );
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurpleAccent,
-        centerTitle: true,
-        elevation: 10.0,
-        foregroundColor: Colors.black,
         title: Text("Shopper"),
-        toolbarOpacity: 0.8,
+        // backgroundColor: Colors.deepPurpleAccent,
+        // centerTitle: true,
+        // elevation: 10.0,
+        // foregroundColor: Colors.black,
+        // toolbarOpacity: 0.8,
         actions: <Widget>[
-          IconButton(icon: const Icon(Icons.settings), onPressed: () {})
+          IconButton(
+            icon: Icon(Icons.search),
+            tooltip: 'Search',
+            onPressed: () {
+              Navigator.pushNamed(context, "/search");
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.settings),
+            tooltip: 'Settings',
+            onPressed: () {
+              Navigator.pushNamed(context, "/settings");
+            },
+          ),
         ],
       ),
       drawer: Drawer(
@@ -49,116 +87,61 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             DrawerHeader(
               child: Icon(
-                Icons.account_box,
-                size: 72.0,
+                Icons.adb_outlined,
+                size: 72,
               ),
-              decoration: BoxDecoration(
-                color: Colors.deepPurpleAccent,
-              ),
+              decoration: BoxDecoration(color: Colors.deepPurpleAccent),
             ),
             ListTile(
-              title: Text('Settings'),
-              onTap: () {
-                Navigator.pushNamed(context, "/settings");
-              },
+              leading: Icon(Icons.settings),
+              enableFeedback: true,
+              focusColor: Colors.blue,
+              title: Text("Settings"),
+              onTap: () => Navigator.pushNamed(context, "/settings"),
             ),
             ListTile(
-              title: Text('Account'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
+              leading: Icon(Icons.search),
+              enableFeedback: true,
+              focusColor: Colors.blue,
+              title: Text("Search"),
+              onTap: () => Navigator.pushNamed(context, "/search"),
+            )
           ],
         ),
       ),
       body: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: TabBar(
-              tabs: <Widget>[
+          length: 3,
+          child: Scaffold(
+            appBar: AppBar(
+              bottom: TabBar(tabs: <Widget>[
                 Tab(
-                  icon: Icon(Icons.shopping_bag_rounded),
+                  icon: Icon(Icons.shopping_bag),
                   text: "Home",
                 ),
                 Tab(
-                  icon: Icon(Icons.shopping_cart_rounded),
+                  icon: Icon(Icons.shopping_cart),
                   text: "Cart",
                 ),
                 Tab(
-                  icon: Icon(Icons.account_circle_rounded),
+                  icon: Icon(Icons.account_circle),
                   text: "Account",
                 ),
-              ],
+              ]),
             ),
-            // title: Text('Tabs Demo'),
-          ),
-          body: TabBarView(
-            children: [
-              PageOne(),
-              PageTwo(),
-              PageThree(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class PageOne extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => ListTile(title: Text('Item #$index')),
-              childCount: 1000,
+            body: TabBarView(
+              children: [HomeTabPage(), CartTabPage(), AccountTabPage()],
             ),
-          ),
-        ],
-      ),
+          )),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {},
-        foregroundColor: Colors.blueAccent,
-        backgroundColor: Colors.grey,
-        child: const Icon(Icons.search_rounded),
-      ),
-    );
-  }
-}
-
-class PageTwo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Text("data"),
-          Text("data"),
-          Text("data"),
-          Text("data"),
-        ],
-      ),
-    );
-  }
-}
-
-class PageThree extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        // This Text widget uses the Raleway font.
-        child: Text(
-          'Sample text',
-          style: TextStyle(
-            fontFamily: 'Times New Roman',
-          ),
-        ),
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('A SnackBar has been shown.'),
+            ),
+          );
+        }, // on pressed
+        tooltip: "Floating Button",
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -169,58 +152,66 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurpleAccent,
-        centerTitle: true,
-        elevation: 10.0,
-        foregroundColor: Colors.black,
-        title: Text("Shopper"),
-        toolbarOpacity: 0.8,
-        actions: <Widget>[
-          IconButton(icon: const Icon(Icons.settings), onPressed: () {})
+        title: Text("Settings"),
+      ),
+      body: Center(),
+    );
+  }
+}
+
+class SearchPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Search"),
+      ),
+      body: Center(),
+    );
+  }
+}
+
+class HomeTabPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          SliverList(
+              delegate: SliverChildBuilderDelegate(
+                  (context, index) => ListTile(
+                        leading: Icon(Icons.ac_unit_sharp),
+                        title: Text("Item $index"),
+                      ),
+                  childCount: 50))
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            ListTile(
-              title: Text('Settings'),
-              onTap: () {
-                Navigator.pushNamed(context, "/settings");
-              },
-            ),
-            ListTile(
-              title: Text('Account'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-          ],
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            ListTile(
-              title: Text('Settings'),
-              onTap: () {
-                Navigator.pushNamed(context, "/settings");
-              },
-            ),
-            ListTile(
-              title: Text('Account'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-          ],
-        ),
-        ),
+    );
+  }
+}
+
+class CartTabPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          SliverList(
+              delegate: SliverChildBuilderDelegate(
+                  (context, index) => ListTile(
+                        leading: Icon(Icons.account_balance_rounded),
+                        title: Text("Item $index"),
+                      ),
+                  childCount: 10))
+        ],
       ),
     );
+  }
+}
+
+class AccountTabPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold();
   }
 }
